@@ -236,12 +236,12 @@ export const Defaults = {
   amountOptions: [100, 200, 250, 500],
 } as const;
 
-// Glass dimensions (relative to screen) - larger, more elegant proportions
+// Glass dimensions (relative to screen) - wider, shorter like widget
 export const GlassDimensions = {
-  widthRatio: 0.50,   // 50% of screen width
-  heightRatio: 0.52,  // 52% of screen height (larger, prominent)
-  strokeWidth: 1.2,   // Thinner stroke for elegance
-  cornerRadius: 16,   // Softer rounded corners
-  topWidthRatio: 0.80,    // Top width relative to glass width
-  bottomWidthRatio: 0.58, // Bottom width relative to glass width (more tapered)
+  widthRatio: 0.58,   // 58% of screen width (wider)
+  heightRatio: 0.38,  // 38% of screen height (shorter, like widget proportions)
+  strokeWidth: 1.0,   // Thinner stroke for elegance
+  cornerRadius: 12,   // Softer rounded corners
+  topWidthRatio: 0.85,    // Top width relative to glass width (like widget)
+  bottomWidthRatio: 0.62, // Bottom width relative to glass width (like widget)
 } as const;

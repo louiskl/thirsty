@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 
 // MARK: - Color Extensions
 
@@ -27,6 +28,26 @@ extension Color {
     static let glassHighlight = Color.white.opacity(0.9)
     static let glassReflection = Color.white.opacity(0.5)
     static let buttonBackground = Color(hex: "F3F4F6")
+    
+    // Secondary button (Minus) - light/transparent background
+    static let buttonSecondaryBackground = Color(UIColor { traits in
+        traits.userInterfaceStyle == .dark
+            ? UIColor(white: 1.0, alpha: 0.2)
+            : UIColor(red: 0.95, green: 0.96, blue: 0.97, alpha: 1.0)
+    })
+    static let buttonSecondaryForeground = Color(UIColor { traits in
+        traits.userInterfaceStyle == .dark
+            ? UIColor.white
+            : UIColor(red: 0.49, green: 0.73, blue: 0.99, alpha: 1.0)
+    })
+    
+    // Primary button (Plus) - colored/blue background
+    static let buttonPrimaryBackground = Color(UIColor { traits in
+        traits.userInterfaceStyle == .dark
+            ? UIColor(red: 0.49, green: 0.73, blue: 0.99, alpha: 0.9)
+            : UIColor(red: 0.49, green: 0.73, blue: 0.99, alpha: 1.0)
+    })
+    static let buttonPrimaryForeground = Color.white
     
     // Bubble colors
     static let bubble = Color.white.opacity(0.6)

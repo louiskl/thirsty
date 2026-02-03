@@ -26,6 +26,24 @@ const syncToWidget = (consumed: number, goal: number) => {
   }
 };
 
+// Get data from widget (iOS only) - returns null if no widget updates
+const getWidgetData = async (): Promise<{
+  consumed: number;
+  goal: number;
+  widgetUpdated: boolean;
+} | null> => {
+  if (Platform.OS === 'ios' && SharedDataModule?.getWidgetData) {
+    try {
+      const data = await SharedDataModule.getWidgetData();
+      return data;
+    } catch (error) {
+      console.warn('Failed to get widget data:', error);
+      return null;
+    }
+  }
+  return null;
+};
+
 interface WaterStoreState {
   todayRecord: DailyRecord;
   settings: UserSettings;
@@ -65,15 +83,20 @@ export function WaterStoreProvider({ children }: WaterStoreProviderProps) {
   const [showGoalReached, setShowGoalReached] = useState(false);
   const hasShownGoalReached = useRef(false);
   const appState = useRef(AppState.currentState);
+  const skipNextWidgetSync = useRef(false); // Flag to skip one widget sync
 
   // Load data on mount
   useEffect(() => {
-    loadData();
+    loadDataWithWidgetSync();
   }, []);
 
   // Sync to widget when todayRecord changes
   useEffect(() => {
     if (!isLoading) {
+      if (skipNextWidgetSync.current) {
+        skipNextWidgetSync.current = false;
+        return;
+      }
       syncToWidget(todayRecord.consumed, settings.dailyGoal);
     }
   }, [todayRecord.consumed, settings.dailyGoal, isLoading]);
@@ -81,9 +104,9 @@ export function WaterStoreProvider({ children }: WaterStoreProviderProps) {
   // Listen for app state changes to reload data when coming back to foreground
   useEffect(() => {
     const handleAppStateChange = async (nextAppState: AppStateStatus) => {
-      // When app comes to foreground, reload data to sync any widget changes
+      // When app comes to foreground, sync with widget
       if (appState.current.match(/inactive|background/) && nextAppState === 'active') {
-        await loadData();
+        await syncFromWidget();
       }
       appState.current = nextAppState;
     };
@@ -91,6 +114,37 @@ export function WaterStoreProvider({ children }: WaterStoreProviderProps) {
     const subscription = AppState.addEventListener('change', handleAppStateChange);
     return () => subscription.remove();
   }, []);
+  
+  // Sync FROM widget - check if widget has newer data
+  const syncFromWidget = async () => {
+    const widgetData = await getWidgetData();
+    if (!widgetData) return;
+    
+    // Compare with current app data
+    setTodayRecord((currentRecord) => {
+      if (widgetData.consumed !== currentRecord.consumed) {
+        console.log('Widget sync: widget has', widgetData.consumed, 'app has', currentRecord.consumed);
+        
+        // Skip the next widget sync since we're syncing FROM widget
+        skipNextWidgetSync.current = true;
+        
+        const diff = widgetData.consumed - currentRecord.consumed;
+        return {
+          ...currentRecord,
+          consumed: widgetData.consumed,
+          entries: diff !== 0 ? [
+            ...currentRecord.entries,
+            {
+              id: generateId(),
+              amount: diff,
+              timestamp: new Date().toISOString(),
+            },
+          ] : currentRecord.entries,
+        };
+      }
+      return currentRecord;
+    });
+  };
 
   // Save today's record when it changes
   useEffect(() => {
@@ -115,7 +169,7 @@ export function WaterStoreProvider({ children }: WaterStoreProviderProps) {
     }
   }, [settings, isLoading]);
 
-  const loadData = async () => {
+  const loadDataWithWidgetSync = async () => {
     setIsLoading(true);
     try {
       const [loadedSettings, loadedHistory] = await Promise.all([
@@ -126,21 +180,54 @@ export function WaterStoreProvider({ children }: WaterStoreProviderProps) {
       setSettings(loadedSettings);
       setHistory(loadedHistory);
       
+      // Load app data
       const loadedTodayRecord = await loadTodayRecord(loadedSettings.dailyGoal);
-      setTodayRecord(loadedTodayRecord);
+      
+      // Check widget data - use widget value if different (widget might have newer data)
+      const widgetData = await getWidgetData();
+      
+      let finalRecord = loadedTodayRecord;
+      
+      if (widgetData && widgetData.consumed !== loadedTodayRecord.consumed) {
+        console.log('Initial load: Widget has', widgetData.consumed, 'AsyncStorage has', loadedTodayRecord.consumed);
+        // Use the widget data as it might be more recent
+        const diff = widgetData.consumed - loadedTodayRecord.consumed;
+        finalRecord = {
+          ...loadedTodayRecord,
+          consumed: widgetData.consumed,
+          entries: diff !== 0 ? [
+            ...loadedTodayRecord.entries,
+            {
+              id: generateId(),
+              amount: diff,
+              timestamp: new Date().toISOString(),
+            },
+          ] : loadedTodayRecord.entries,
+        };
+        // Skip widget sync since we just got data from widget
+        skipNextWidgetSync.current = true;
+      }
+      
+      setTodayRecord(finalRecord);
       
       // Check if goal was already reached today
-      if (loadedTodayRecord.consumed >= loadedSettings.dailyGoal) {
+      if (finalRecord.consumed >= loadedSettings.dailyGoal) {
         hasShownGoalReached.current = true;
       }
       
-      // Initial sync to widget
-      syncToWidget(loadedTodayRecord.consumed, loadedSettings.dailyGoal);
+      // Only sync to widget if we didn't just get data from widget
+      if (!skipNextWidgetSync.current) {
+        syncToWidget(finalRecord.consumed, loadedSettings.dailyGoal);
+      }
     } catch (error) {
       console.error('Error loading data:', error);
     } finally {
       setIsLoading(false);
     }
+  };
+  
+  const loadData = async () => {
+    await loadDataWithWidgetSync();
   };
 
   const addWater = useCallback((amount: number) => {

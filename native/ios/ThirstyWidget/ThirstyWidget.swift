@@ -130,32 +130,32 @@ struct SmallWidgetView: View {
                 .font(.system(size: 10, weight: .medium, design: .rounded))
                 .foregroundColor(Color.textSecondary)
             
-            // Interactive buttons - pill shape
+            // Interactive buttons - pill shape (two styles)
             HStack(spacing: 8) {
-                // Minus button
+                // Minus button (secondary - light background)
                 Button(intent: RemoveWaterIntent()) {
                     ZStack {
                         Capsule()
-                            .fill(Color.buttonBackground)
+                            .fill(Color.buttonSecondaryBackground)
                             .frame(width: 44, height: 28)
                         
                         Image(systemName: "minus")
                             .font(.system(size: 12, weight: .semibold))
-                            .foregroundColor(Color.water)
+                            .foregroundColor(Color.buttonSecondaryForeground)
                     }
                 }
                 .buttonStyle(.plain)
                 
-                // Plus button
+                // Plus button (primary - colored background)
                 Button(intent: AddWaterIntent()) {
                     ZStack {
                         Capsule()
-                            .fill(Color.buttonBackground)
+                            .fill(Color.buttonPrimaryBackground)
                             .frame(width: 44, height: 28)
                         
                         Image(systemName: "plus")
                             .font(.system(size: 12, weight: .semibold))
-                            .foregroundColor(Color.water)
+                            .foregroundColor(Color.buttonPrimaryForeground)
                     }
                 }
                 .buttonStyle(.plain)
@@ -200,32 +200,32 @@ struct MediumWidgetView: View {
                 
                 Spacer()
                 
-                // Interactive buttons - pill shape
+                // Interactive buttons - pill shape (two styles)
                 HStack(spacing: 10) {
-                    // Minus button
+                    // Minus button (secondary - light background)
                     Button(intent: RemoveWaterIntent()) {
                         ZStack {
                             Capsule()
-                                .fill(Color.buttonBackground)
+                                .fill(Color.buttonSecondaryBackground)
                                 .frame(width: 56, height: 36)
                             
                             Image(systemName: "minus")
                                 .font(.system(size: 16, weight: .semibold))
-                                .foregroundColor(Color.water)
+                                .foregroundColor(Color.buttonSecondaryForeground)
                         }
                     }
                     .buttonStyle(.plain)
                     
-                    // Plus button
+                    // Plus button (primary - colored background)
                     Button(intent: AddWaterIntent()) {
                         ZStack {
                             Capsule()
-                                .fill(Color.buttonBackground)
+                                .fill(Color.buttonPrimaryBackground)
                                 .frame(width: 56, height: 36)
                             
                             Image(systemName: "plus")
                                 .font(.system(size: 16, weight: .semibold))
-                                .foregroundColor(Color.water)
+                                .foregroundColor(Color.buttonPrimaryForeground)
                         }
                     }
                     .buttonStyle(.plain)

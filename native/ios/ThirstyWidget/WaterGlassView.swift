@@ -46,13 +46,6 @@ struct WaterGlassView: View {
                         )
                         .frame(width: width, height: glassHeight)
                     
-                    // Inner glass stroke for depth (subtle)
-                    GlassShape()
-                        .stroke(Color.glassStrokeLight, lineWidth: 0.5)
-                        .padding(2)
-                        .frame(width: width, height: glassHeight)
-                        .opacity(0.4)
-                    
                     // Water fill with gradient - blue theme matching mockup
                     GlassShape()
                         .fill(
@@ -90,10 +83,6 @@ struct WaterGlassView: View {
                     // Glass highlight - top rim
                     GlassHighlight(width: width)
                         .offset(y: -glassHeight / 2 + 3)
-                    
-                    // Side reflection - left
-                    SideReflection(glassHeight: glassHeight)
-                        .offset(x: -width / 2 + 6)
                 }
                 .offset(y: -shadowHeight / 2)
             }

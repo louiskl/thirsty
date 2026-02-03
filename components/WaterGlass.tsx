@@ -460,15 +460,6 @@ export function WaterGlass({
             opacity={0.8}
           />
 
-          {/* Glass inner stroke for depth (subtle) */}
-          <Path
-            d={innerGlassPath}
-            stroke={Colors.glassStrokeLight}
-            strokeWidth={0.5}
-            fill="url(#innerHighlight)"
-            opacity={0.4}
-          />
-
           {/* Water fill */}
           <G clipPath="url(#glassClip)">
             <AnimatedRect
@@ -504,45 +495,6 @@ export function WaterGlass({
             strokeWidth={3}
             strokeLinecap="round"
             fill="none"
-          />
-
-          {/* Side reflection - left (main highlight) */}
-          <Path
-            d={`
-              M ${centerX - topWidth / 2 + 6} ${glassTop + 18}
-              L ${centerX - bottomWidth / 2 + 5} ${glassBottom - 18}
-            `}
-            stroke={Colors.glassReflection}
-            strokeWidth={2.5}
-            strokeLinecap="round"
-            fill="none"
-            opacity={0.55}
-          />
-
-          {/* Side reflection - left secondary (subtle) */}
-          <Path
-            d={`
-              M ${centerX - topWidth / 2 + 12} ${glassTop + 22}
-              L ${centerX - bottomWidth / 2 + 10} ${glassBottom - 22}
-            `}
-            stroke={Colors.glassReflection}
-            strokeWidth={1.5}
-            strokeLinecap="round"
-            fill="none"
-            opacity={0.25}
-          />
-
-          {/* Side reflection - right (very subtle) */}
-          <Path
-            d={`
-              M ${centerX + topWidth / 2 - 10} ${glassTop + 30}
-              L ${centerX + bottomWidth / 2 - 8} ${glassBottom - 30}
-            `}
-            stroke={Colors.glassReflection}
-            strokeWidth={1.5}
-            strokeLinecap="round"
-            fill="none"
-            opacity={0.2}
           />
         </Svg>
       </Animated.View>
