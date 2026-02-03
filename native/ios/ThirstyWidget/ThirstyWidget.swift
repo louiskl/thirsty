@@ -100,6 +100,8 @@ struct ThirstyWidgetEntryView: View {
             SmallWidgetView(data: entry.waterData)
         case .systemMedium:
             MediumWidgetView(data: entry.waterData)
+        case .accessoryRectangular:
+            AccessoryRectangularView(data: entry.waterData)
         default:
             SmallWidgetView(data: entry.waterData)
         }
@@ -250,7 +252,7 @@ struct ThirstyWidget: Widget {
         }
         .configurationDisplayName("Wasser Tracker")
         .description("Verfolge deinen täglichen Wasserkonsum")
-        .supportedFamilies([.systemSmall, .systemMedium])
+        .supportedFamilies([.systemSmall, .systemMedium, .accessoryRectangular])
     }
 }
 
