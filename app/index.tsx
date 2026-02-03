@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useRef } from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -9,7 +9,6 @@ import Animated, {
   withTiming,
   withSequence,
   withDelay,
-  withSpring,
   Easing,
   FadeIn,
   FadeOut,
@@ -17,7 +16,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import * as Haptics from 'expo-haptics';
-import { Colors, Typography, Spacing, Radius, Defaults, Timing } from '../lib/constants';
+import { Colors, Typography, Spacing, Defaults, Timing } from '../lib/constants';
 import { WaterGlass } from '../components/WaterGlass';
 import { AmountSheet } from '../components/AmountSheet';
 import { QuickPanel } from '../components/QuickPanel';
@@ -256,26 +255,28 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingBottom: Spacing.xl,
+    paddingBottom: Spacing.lg,
   },
   glassContainer: {
     alignItems: 'center',
     justifyContent: 'center',
+    // Extra space for the glass shadow
+    marginBottom: Spacing.md,
   },
   feedbackBadge: {
     position: 'absolute',
-    top: '42%',
+    top: '40%',
     // No background - just floating text
   },
   feedbackText: {
-    fontFamily: Typography.fonts.light,
-    fontSize: Typography.sizes.caption,
-    color: Colors.textTertiary,
+    fontFamily: Typography.fonts.medium,
+    fontSize: Typography.sizes.footnote,
+    color: Colors.water,
     letterSpacing: Typography.letterSpacing.wide,
   },
   amountContainer: {
     alignItems: 'center',
-    marginTop: Spacing.xxl,
+    marginTop: Spacing.xl,
   },
   amountRow: {
     flexDirection: 'row',
@@ -284,26 +285,26 @@ const styles = StyleSheet.create({
   amountValue: {
     fontFamily: Typography.fonts.light,
     fontSize: Typography.sizes.display,
-    color: '#9CA3AF', // Lighter, softer gray for main display
+    color: Colors.text,
     letterSpacing: Typography.letterSpacing.tighter,
     lineHeight: Typography.sizes.display * Typography.lineHeights.tight,
   },
   amountUnit: {
     fontFamily: Typography.fonts.regular,
     fontSize: Typography.sizes.title2,
-    color: Colors.textTertiary,
+    color: Colors.textSecondary,
     marginLeft: Spacing.sm,
   },
   goalText: {
     fontFamily: Typography.fonts.regular,
     fontSize: Typography.sizes.body,
-    color: Colors.textTertiary,
+    color: Colors.textSecondary,
     marginTop: Spacing.sm,
     letterSpacing: Typography.letterSpacing.normal,
   },
   hintContainer: {
     position: 'absolute',
-    bottom: Spacing.xxl,
+    bottom: Spacing.xxxl,
     alignItems: 'center',
   },
   hintText: {
@@ -322,7 +323,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    height: 200, // Larger swipe detection area
+    height: 180,
     alignItems: 'center',
     justifyContent: 'flex-end',
     paddingBottom: Spacing.lg,
