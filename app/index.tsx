@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -10,8 +10,6 @@ import Animated, {
   withSequence,
   withDelay,
   Easing,
-  FadeIn,
-  FadeOut,
   runOnJS,
 } from 'react-native-reanimated';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
@@ -30,15 +28,12 @@ export default function MainScreen() {
     settings,
     addWater,
     removeWater,
-    setGlassStyle,
     isLoading,
   } = useWaterStore();
 
   const [showAmountSheet, setShowAmountSheet] = useState(false);
   const [showQuickPanel, setShowQuickPanel] = useState(false);
-  const [showHint, setShowHint] = useState(true);
   const [feedbackAmount, setFeedbackAmount] = useState<number | null>(null);
-  const isFirstTap = useRef(true);
 
   // Setup notifications
   useNotifications({ settings });
@@ -80,12 +75,6 @@ export default function MainScreen() {
   };
 
   const handleTap = () => {
-    // Hide hint after first tap
-    if (isFirstTap.current) {
-      isFirstTap.current = false;
-      setShowHint(false);
-    }
-    
     addWater(Defaults.tapAmount);
     showFeedback(Defaults.tapAmount);
   };
@@ -122,13 +111,10 @@ export default function MainScreen() {
       }
     });
 
-  // Format liters nicely
+  // Format liters nicely - German style with comma
   const formatLiters = (ml: number) => {
     const liters = ml / 1000;
-    if (liters >= 1) {
-      return liters.toFixed(1);
-    }
-    return liters.toFixed(2);
+    return liters.toFixed(2).replace('.', ',');
   };
 
   if (isLoading) {
@@ -163,7 +149,6 @@ export default function MainScreen() {
               onLongPress={handleLongPress}
               onSwipeDown={handleSwipeDown}
               isGoalReached={isGoalReached}
-              glassStyle={settings.glassStyle}
             />
             
             {/* Refined feedback badge - whisper subtle */}
@@ -185,31 +170,42 @@ export default function MainScreen() {
             </Text>
           </View>
 
-          {/* Hint - only show initially, subtle */}
-          {showHint && (
-            <Animated.View 
-              entering={FadeIn.delay(600).duration(500)}
-              exiting={FadeOut.duration(400)}
-              style={styles.hintContainer}
+          {/* Plus/Minus Buttons - Pill-shaped, modern design */}
+          <View style={styles.buttonContainer}>
+            <Pressable
+              style={({ pressed }) => [
+                styles.actionButton,
+                styles.minusButton,
+                pressed && styles.buttonPressed,
+              ]}
+              onPress={() => {
+                if (todayRecord.consumed > 0) {
+                  removeWater(Defaults.tapAmount);
+                  showFeedback(-Defaults.tapAmount);
+                }
+              }}
+              onLongPress={handleLongPress}
             >
-              <Text style={styles.hintText}>
-                Tippe auf das Glas
-              </Text>
-              <Text style={styles.hintSubtext}>
-                um {Defaults.tapAmount} ml hinzuzufügen
-              </Text>
-            </Animated.View>
-          )}
-        </View>
+              <Text style={styles.minusIcon}>−</Text>
+            </Pressable>
 
-        {/* Swipe-up indicator - gentle chevron at bottom, tappable */}
-        <GestureDetector gesture={swipeUpGesture}>
-          <View style={styles.swipeArea}>
-            <Pressable onPress={openQuickPanel} hitSlop={20}>
-              <SwipeUpIndicator />
+            <Pressable
+              style={({ pressed }) => [
+                styles.actionButton,
+                styles.plusButton,
+                pressed && styles.buttonPressed,
+              ]}
+              onPress={handleTap}
+              onLongPress={handleLongPress}
+            >
+              <Text style={styles.plusIcon}>+</Text>
             </Pressable>
           </View>
-        </GestureDetector>
+        </View>
+
+        {/* Swipe-up gesture area - invisible, no indicator */}
+        <GestureDetector gesture={swipeUpGesture}>
+          <View style={styles.swipeArea} />
       </SafeAreaView>
 
       {/* Amount Sheet */}
@@ -225,24 +221,13 @@ export default function MainScreen() {
         onClose={() => setShowQuickPanel(false)}
         dailyGoal={settings.dailyGoal}
         defaultAmount={Defaults.tapAmount}
-        glassStyle={settings.glassStyle}
         onGoalPress={() => router.push('/settings')}
         onAmountPress={() => setShowAmountSheet(true)}
-        onGlassStyleChange={setGlassStyle}
       />
     </View>
   );
 }
 
-// Swipe-up indicator - gentle chevron pointing up
-function SwipeUpIndicator() {
-  return (
-    <View style={styles.chevronContainer}>
-      <View style={styles.chevronLine1} />
-      <View style={styles.chevronLine2} />
-    </View>
-  );
-}
 
 const styles = StyleSheet.create({
   container: {
@@ -302,50 +287,47 @@ const styles = StyleSheet.create({
     marginTop: Spacing.sm,
     letterSpacing: Typography.letterSpacing.normal,
   },
-  hintContainer: {
-    position: 'absolute',
-    bottom: Spacing.xxxl,
+  buttonContainer: {
+    flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
+    gap: Spacing.md,
+    marginTop: Spacing.xl,
   },
-  hintText: {
+  actionButton: {
+    width: 72,
+    height: 48,
+    borderRadius: Radius.full,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  minusButton: {
+    backgroundColor: Colors.backgroundSecondary,
+  },
+  plusButton: {
+    backgroundColor: Colors.backgroundSecondary,
+  },
+  buttonPressed: {
+    opacity: 0.7,
+    transform: [{ scale: 0.96 }],
+  },
+  minusIcon: {
     fontFamily: Typography.fonts.medium,
-    fontSize: Typography.sizes.body,
-    color: Colors.textSecondary,
+    fontSize: 24,
+    color: Colors.water,
+    lineHeight: 28,
   },
-  hintSubtext: {
-    fontFamily: Typography.fonts.regular,
-    fontSize: Typography.sizes.caption,
-    color: Colors.textTertiary,
-    marginTop: Spacing.xs,
+  plusIcon: {
+    fontFamily: Typography.fonts.medium,
+    fontSize: 24,
+    color: Colors.water,
+    lineHeight: 28,
   },
   swipeArea: {
     position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
-    height: 180,
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    paddingBottom: Spacing.lg,
-  },
-  chevronContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  chevronLine1: {
-    width: 14,
-    height: 2,
-    backgroundColor: Colors.textTertiary,
-    borderRadius: 1,
-    transform: [{ rotate: '-40deg' }],
-  },
-  chevronLine2: {
-    width: 14,
-    height: 2,
-    backgroundColor: Colors.textTertiary,
-    borderRadius: 1,
-    transform: [{ rotate: '40deg' }],
-    marginLeft: -5,
+    height: 100,
   },
 });

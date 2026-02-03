@@ -13,16 +13,12 @@ export interface DailyRecord {
   entries: WaterEntry[];
 }
 
-// Available glass styles
-export type GlassStyle = 'classic' | 'round' | 'slim' | 'wine' | 'beer';
-
 export interface UserSettings {
   dailyGoal: number;            // ml (default: 2000)
   notificationsEnabled: boolean;
   notificationInterval: number;  // Minuten
   quietHoursStart: string;       // "22:00"
   quietHoursEnd: string;         // "07:00"
-  glassStyle: GlassStyle;        // Glass appearance (default: 'classic')
 }
 
 export interface WaterStore {

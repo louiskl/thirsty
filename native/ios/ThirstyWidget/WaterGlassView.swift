@@ -31,9 +31,9 @@ struct WaterGlassView: View {
                 
                 // Glass container
                 ZStack {
-                    // Glass body - outer stroke (thinner, more elegant)
+                    // Glass body - outer stroke (very subtle like mockup)
                     GlassShape()
-                        .stroke(Color.glassStroke, lineWidth: 1.2)
+                        .stroke(Color.glassStroke.opacity(0.8), lineWidth: 1.0)
                         .frame(width: width, height: glassHeight)
                     
                     // Glass body - fill with subtle gradient
@@ -47,20 +47,20 @@ struct WaterGlassView: View {
                         )
                         .frame(width: width, height: glassHeight)
                     
-                    // Inner glass stroke for depth
+                    // Inner glass stroke for depth (subtle)
                     GlassShape()
-                        .stroke(Color.glassStrokeLight, lineWidth: 0.6)
+                        .stroke(Color.glassStrokeLight, lineWidth: 0.5)
                         .padding(2)
                         .frame(width: width, height: glassHeight)
-                        .opacity(0.55)
+                        .opacity(0.4)
                     
-                    // Water fill with gradient - turquoise theme
+                    // Water fill with gradient - blue theme matching mockup
                     GlassShape()
                         .fill(
                             LinearGradient(
                                 colors: isGoalReached
                                     ? [Color.successLight, Color.success.opacity(0.88), Color.successDark.opacity(0.92)]
-                                    : [Color.waterLight.opacity(0.85), Color.water.opacity(0.88), Color.waterMid.opacity(0.92), Color.waterDark.opacity(0.95)],
+                                    : [Color.waterLight.opacity(0.90), Color.water.opacity(0.92), Color.waterMid.opacity(0.95), Color.waterDark.opacity(0.98)],
                                 startPoint: .top,
                                 endPoint: .bottom
                             )

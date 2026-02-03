@@ -3,13 +3,13 @@
 // 3D glass with depth, reflections, and character.
 
 // Premium color palette - vibrant yet soft, with 3D depth
-// Modern turquoise tones for a fresh, clean appearance
+// Cool blue-turquoise tones matching the elegant mockup design
 export const Colors = {
-  // Primary - Turquoise water tones with depth (for 3D effect)
-  water: '#5EEAD4',           // Main turquoise (fresh, modern)
-  waterLight: '#99F6E4',      // Top of water (lighter turquoise)
-  waterDark: '#2DD4BF',       // Bottom of water (deeper turquoise)
-  waterDeep: '#14B8A6',       // Deepest turquoise tone
+  // Primary - Blue-turquoise water tones with depth (matching mockup)
+  water: '#7DD3FC',           // Main sky blue (cool, elegant)
+  waterLight: '#BAE6FD',      // Top of water (light sky blue)
+  waterDark: '#38BDF8',       // Bottom of water (deeper blue)
+  waterDeep: '#0EA5E9',       // Deepest blue tone
   
   // Backgrounds - Warm, natural
   background: '#FAFBFC',       // Hint of warmth, not pure white
@@ -19,14 +19,14 @@ export const Colors = {
   backgroundGradient: ['#FAFBFC', '#F8FAFC', '#F1F5F9'] as const,
   backgroundGradientLocations: [0, 0.5, 1] as readonly number[],
   
-  // Glass - 3D effect colors
-  glassStroke: '#CBD5E1',     // Glass outline (slightly stronger)
-  glassStrokeLight: '#E2E8F0', // Inner glass outline
-  glassFill: 'rgba(255, 255, 255, 0.15)',
-  glassHighlight: 'rgba(255, 255, 255, 0.85)', // Top rim highlight
-  glassReflection: 'rgba(255, 255, 255, 0.4)', // Side reflection
-  glassShadow: 'rgba(148, 163, 184, 0.25)',    // Shadow under glass
-  glassInnerShadow: 'rgba(0, 0, 0, 0.03)',     // Inner depth
+  // Glass - 3D effect colors (softer, more elegant like mockup)
+  glassStroke: '#E2E8F0',     // Glass outline (very subtle)
+  glassStrokeLight: '#F1F5F9', // Inner glass outline (almost invisible)
+  glassFill: 'rgba(255, 255, 255, 0.12)',
+  glassHighlight: 'rgba(255, 255, 255, 0.9)', // Top rim highlight
+  glassReflection: 'rgba(255, 255, 255, 0.5)', // Side reflection (stronger)
+  glassShadow: 'rgba(148, 163, 184, 0.20)',    // Shadow under glass (softer)
+  glassInnerShadow: 'rgba(0, 0, 0, 0.02)',     // Inner depth (subtler)
   
   // Bubbles
   bubble: 'rgba(255, 255, 255, 0.6)',
@@ -49,7 +49,7 @@ export const Colors = {
   overlayLight: 'rgba(255, 255, 255, 0.92)',
   
   // Gradients (as arrays for LinearGradient)
-  waterGradient: ['#CCFBF1', '#5EEAD4', '#2DD4BF', '#14B8A6'] as const,
+  waterGradient: ['#E0F2FE', '#7DD3FC', '#38BDF8', '#0EA5E9'] as const,
   waterGradientLocations: [0, 0.35, 0.7, 1] as readonly number[],
   successGradient: ['#D1FAE5', '#6EE7B7', '#34D399'] as const,
   successGradientLocations: [0, 0.5, 1] as readonly number[],
@@ -169,16 +169,16 @@ export const Parallax = {
   updateInterval: 33, // ~30fps
 } as const;
 
-// Bubble configuration - subtle and elegant
+// Bubble configuration - subtle and elegant like mockup
 export const Bubbles = {
-  // Number of bubbles (fewer for cleaner look)
-  count: 5,
+  // Number of bubbles (more for richer appearance like mockup)
+  count: 8,
   // Size range (min, max) as percentage of glass width - smaller, more delicate
-  sizeRange: [0.025, 0.055] as const,
+  sizeRange: [0.015, 0.040] as const,
   // Speed range (min, max) in seconds for full rise - slower, more graceful
-  speedRange: [4, 8] as const,
+  speedRange: [5, 10] as const,
   // Horizontal wobble amplitude as percentage of glass width - subtle movement
-  wobbleAmplitude: 0.03,
+  wobbleAmplitude: 0.02,
 } as const;
 
 // Shadow styles - whisper-soft depth
@@ -236,12 +236,12 @@ export const Defaults = {
   amountOptions: [100, 200, 250, 500],
 } as const;
 
-// Glass dimensions (relative to screen) - slimmer, more elegant proportions
+// Glass dimensions (relative to screen) - larger, more elegant proportions
 export const GlassDimensions = {
-  widthRatio: 0.40,   // 40% of screen width (slimmer)
-  heightRatio: 0.36,  // 36% of screen height
-  strokeWidth: 1.5,   // Thinner stroke for elegance
-  cornerRadius: 12,   // More rounded corners
-  topWidthRatio: 0.75,    // Top width relative to glass width
-  bottomWidthRatio: 0.55, // Bottom width relative to glass width (more tapered)
+  widthRatio: 0.50,   // 50% of screen width
+  heightRatio: 0.52,  // 52% of screen height (larger, prominent)
+  strokeWidth: 1.2,   // Thinner stroke for elegance
+  cornerRadius: 16,   // Softer rounded corners
+  topWidthRatio: 0.80,    // Top width relative to glass width
+  bottomWidthRatio: 0.58, // Bottom width relative to glass width (more tapered)
 } as const;

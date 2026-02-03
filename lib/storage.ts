@@ -26,7 +26,6 @@ export function getDefaultSettings(): UserSettings {
     notificationInterval: Defaults.notificationInterval,
     quietHoursStart: Defaults.quietHoursStart,
     quietHoursEnd: Defaults.quietHoursEnd,
-    glassStyle: 'classic',
   };
 }
 

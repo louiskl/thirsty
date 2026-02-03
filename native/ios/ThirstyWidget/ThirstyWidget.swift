@@ -12,12 +12,12 @@ struct WaterData {
     
     var consumedLiters: String {
         let liters = Double(consumed) / 1000.0
-        return String(format: "%.1f", liters)
+        return String(format: "%.2f", liters)
     }
     
     var goalLiters: String {
         let liters = Double(goal) / 1000.0
-        return String(format: "%.1f", liters)
+        return String(format: "%.2f", liters)
     }
     
     var isGoalReached: Bool {
@@ -112,36 +112,36 @@ struct SmallWidgetView: View {
     let data: WaterData
     
     var body: some View {
-        VStack(spacing: 4) {
-            // Glass
+        VStack(spacing: 6) {
+            // Glass - larger, more prominent
             WaterGlassView(
                 fillPercentage: data.percentage,
                 isGoalReached: data.isGoalReached
             )
-            .frame(width: 44, height: 52)
+            .frame(width: 50, height: 60)
             
-            // Amount
-            Text("\(data.consumedLiters)L")
-                .font(.system(size: 20, weight: .semibold, design: .rounded))
+            // Amount with German formatting
+            Text("\(data.consumedLiters.replacingOccurrences(of: ".", with: ",")) L")
+                .font(.system(size: 18, weight: .semibold, design: .rounded))
                 .foregroundColor(Color.textPrimary)
             
             // Goal
-            Text("von \(data.goalLiters)L")
+            Text("von \(data.goalLiters.replacingOccurrences(of: ".", with: ",")) L")
                 .font(.system(size: 10, weight: .medium, design: .rounded))
                 .foregroundColor(Color.textSecondary)
             
-            // Interactive buttons
+            // Interactive buttons - pill shape
             HStack(spacing: 8) {
                 // Minus button
                 Button(intent: RemoveWaterIntent()) {
                     ZStack {
-                        Circle()
+                        Capsule()
                             .fill(Color.buttonBackground)
-                            .frame(width: 32, height: 32)
+                            .frame(width: 44, height: 28)
                         
                         Image(systemName: "minus")
-                            .font(.system(size: 14, weight: .semibold))
-                            .foregroundColor(Color.textSecondary)
+                            .font(.system(size: 12, weight: .semibold))
+                            .foregroundColor(Color.water)
                     }
                 }
                 .buttonStyle(.plain)
@@ -149,13 +149,13 @@ struct SmallWidgetView: View {
                 // Plus button
                 Button(intent: AddWaterIntent()) {
                     ZStack {
-                        Circle()
-                            .fill(data.isGoalReached ? Color.successLight : Color.waterLight)
-                            .frame(width: 32, height: 32)
+                        Capsule()
+                            .fill(Color.buttonBackground)
+                            .frame(width: 44, height: 28)
                         
                         Image(systemName: "plus")
-                            .font(.system(size: 14, weight: .semibold))
-                            .foregroundColor(data.isGoalReached ? Color.success : Color.water)
+                            .font(.system(size: 12, weight: .semibold))
+                            .foregroundColor(Color.water)
                     }
                 }
                 .buttonStyle(.plain)
@@ -171,61 +171,67 @@ struct MediumWidgetView: View {
     let data: WaterData
     
     var body: some View {
-        HStack(spacing: 20) {
-                // Left side - Glass
-                WaterGlassView(
-                    fillPercentage: data.percentage,
-                    isGoalReached: data.isGoalReached
-                )
-                .frame(width: 70, height: 90)
-                
-                // Right side - Info and buttons
-                VStack(alignment: .leading, spacing: 8) {
-                    // Amount
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text("\(data.consumedLiters)L")
-                            .font(.system(size: 32, weight: .semibold, design: .rounded))
+        HStack(spacing: 24) {
+            // Left side - Glass (larger, more prominent)
+            WaterGlassView(
+                fillPercentage: data.percentage,
+                isGoalReached: data.isGoalReached
+            )
+            .frame(width: 80, height: 100)
+            
+            // Right side - Info and buttons
+            VStack(alignment: .leading, spacing: 12) {
+                // Amount with German formatting
+                VStack(alignment: .leading, spacing: 2) {
+                    HStack(alignment: .firstTextBaseline, spacing: 4) {
+                        Text(data.consumedLiters.replacingOccurrences(of: ".", with: ","))
+                            .font(.system(size: 36, weight: .light, design: .rounded))
                             .foregroundColor(Color.textPrimary)
                         
-                        Text("von \(data.goalLiters)L")
-                            .font(.system(size: 14, weight: .medium, design: .rounded))
+                        Text("L")
+                            .font(.system(size: 20, weight: .regular, design: .rounded))
                             .foregroundColor(Color.textSecondary)
                     }
                     
-                    Spacer()
-                    
-                    // Interactive buttons
-                    HStack(spacing: 12) {
-                        // Minus button
-                        Button(intent: RemoveWaterIntent()) {
-                            ZStack {
-                                Circle()
-                                    .fill(Color.buttonBackground)
-                                    .frame(width: 44, height: 44)
-                                
-                                Image(systemName: "minus")
-                                    .font(.system(size: 18, weight: .semibold))
-                                    .foregroundColor(Color.textSecondary)
-                            }
-                        }
-                        .buttonStyle(.plain)
-                        
-                        // Plus button
-                        Button(intent: AddWaterIntent()) {
-                            ZStack {
-                                Circle()
-                                    .fill(data.isGoalReached ? Color.successLight : Color.waterLight)
-                                    .frame(width: 44, height: 44)
-                                
-                                Image(systemName: "plus")
-                                    .font(.system(size: 18, weight: .semibold))
-                                    .foregroundColor(data.isGoalReached ? Color.success : Color.water)
-                            }
-                        }
-                        .buttonStyle(.plain)
-                    }
+                    Text("von \(data.goalLiters.replacingOccurrences(of: ".", with: ",")) L")
+                        .font(.system(size: 14, weight: .medium, design: .rounded))
+                        .foregroundColor(Color.textSecondary)
                 }
                 
+                Spacer()
+                
+                // Interactive buttons - pill shape
+                HStack(spacing: 10) {
+                    // Minus button
+                    Button(intent: RemoveWaterIntent()) {
+                        ZStack {
+                            Capsule()
+                                .fill(Color.buttonBackground)
+                                .frame(width: 56, height: 36)
+                            
+                            Image(systemName: "minus")
+                                .font(.system(size: 16, weight: .semibold))
+                                .foregroundColor(Color.water)
+                        }
+                    }
+                    .buttonStyle(.plain)
+                    
+                    // Plus button
+                    Button(intent: AddWaterIntent()) {
+                        ZStack {
+                            Capsule()
+                                .fill(Color.buttonBackground)
+                                .frame(width: 56, height: 36)
+                            
+                            Image(systemName: "plus")
+                                .font(.system(size: 16, weight: .semibold))
+                                .foregroundColor(Color.water)
+                        }
+                    }
+                    .buttonStyle(.plain)
+                }
+            }
+            
             Spacer()
         }
         .padding(16)

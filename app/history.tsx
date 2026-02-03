@@ -38,7 +38,7 @@ export default function HistoryScreen() {
         >
           <View style={styles.statCard}>
             <Text style={styles.statValue}>
-              {(average / 1000).toFixed(1)}
+              {(average / 1000).toFixed(2)}
             </Text>
             <Text style={styles.statUnit}>L</Text>
             <Text style={styles.statLabel}>Durchschnitt</Text>
@@ -126,7 +126,7 @@ export default function HistoryScreen() {
                       reached && styles.listItemValueReached,
                     ]}
                   >
-                    {(record.consumed / 1000).toFixed(1)} L
+                    {(record.consumed / 1000).toFixed(2)} L
                   </Text>
                   <Text style={styles.listItemPercentage}>{percentage}%</Text>
                 </View>

@@ -3,11 +3,11 @@ import SwiftUI
 // MARK: - Color Extensions
 
 extension Color {
-    // Primary water colors - turquoise theme (matching React Native app)
-    static let water = Color(hex: "5EEAD4")
-    static let waterLight = Color(hex: "99F6E4")
-    static let waterMid = Color(hex: "2DD4BF")
-    static let waterDark = Color(hex: "14B8A6")
+    // Primary water colors - blue-turquoise theme (matching React Native app mockup)
+    static let water = Color(hex: "7DD3FC")
+    static let waterLight = Color(hex: "E0F2FE")
+    static let waterMid = Color(hex: "38BDF8")
+    static let waterDark = Color(hex: "0EA5E9")
     
     // Success colors (goal reached - 3D gradient)
     static let success = Color(hex: "6EE7B7")
@@ -19,13 +19,13 @@ extension Color {
     static let textSecondary = Color(hex: "9CA3AF")
     static let textTertiary = Color(hex: "D1D5DB")
     
-    // UI colors
+    // UI colors (softer, more elegant like mockup)
     static let widgetBackground = Color(hex: "FAFBFC")
-    static let glassStroke = Color(hex: "CBD5E1")
-    static let glassStrokeLight = Color(hex: "E2E8F0")
-    static let glassShadow = Color(hex: "94A3B8").opacity(0.25)
-    static let glassHighlight = Color.white.opacity(0.85)
-    static let glassReflection = Color.white.opacity(0.4)
+    static let glassStroke = Color(hex: "E2E8F0")
+    static let glassStrokeLight = Color(hex: "F1F5F9")
+    static let glassShadow = Color(hex: "94A3B8").opacity(0.20)
+    static let glassHighlight = Color.white.opacity(0.9)
+    static let glassReflection = Color.white.opacity(0.5)
     static let buttonBackground = Color(hex: "F3F4F6")
     
     // Bubble colors

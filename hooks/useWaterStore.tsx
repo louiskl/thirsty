@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, useRef, ReactNode } from 'react';
 import { NativeModules, Platform, AppState, AppStateStatus } from 'react-native';
-import { DailyRecord, UserSettings, WaterEntry, GlassStyle } from '../types';
+import { DailyRecord, UserSettings, WaterEntry } from '../types';
 import {
   loadSettings,
   saveSettings,
@@ -39,7 +39,6 @@ interface WaterStoreActions {
   removeWater: (amount: number) => void;
   removeLastEntry: () => void;
   setDailyGoal: (goal: number) => void;
-  setGlassStyle: (style: GlassStyle) => void;
   toggleNotifications: (enabled: boolean) => void;
   setNotificationInterval: (interval: number) => void;
   setQuietHours: (start: string, end: string) => void;
@@ -191,10 +190,6 @@ export function WaterStoreProvider({ children }: WaterStoreProviderProps) {
     setTodayRecord((prev) => ({ ...prev, goal }));
   }, []);
 
-  const setGlassStyle = useCallback((style: GlassStyle) => {
-    setSettings((prev) => ({ ...prev, glassStyle: style }));
-  }, []);
-
   const toggleNotifications = useCallback((enabled: boolean) => {
     setSettings((prev) => ({ ...prev, notificationsEnabled: enabled }));
   }, []);
@@ -230,7 +225,6 @@ export function WaterStoreProvider({ children }: WaterStoreProviderProps) {
     removeWater,
     removeLastEntry,
     setDailyGoal,
-    setGlassStyle,
     toggleNotifications,
     setNotificationInterval,
     setQuietHours,

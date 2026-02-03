@@ -29,7 +29,6 @@ import Svg, {
 } from 'react-native-svg';
 import { DeviceMotion } from 'expo-sensors';
 import { Colors, Timing, Parallax, Bubbles, GlassDimensions } from '../lib/constants';
-import { GlassStyle } from '../types';
 import { useProgressiveHaptics } from '../hooks/useProgressiveHaptics';
 
 const AnimatedRect = Animated.createAnimatedComponent(Rect);
@@ -44,7 +43,6 @@ interface WaterGlassProps {
   onLongPress: () => void;
   onSwipeDown?: () => void;
   isGoalReached?: boolean;
-  glassStyle?: GlassStyle;
 }
 
 interface BubbleData {
@@ -72,7 +70,6 @@ export function WaterGlass({
   onLongPress,
   onSwipeDown,
   isGoalReached = false,
-  glassStyle = 'classic',
 }: WaterGlassProps) {
   const { width: screenWidth, height: screenHeight } = useWindowDimensions();
   const { playFillHaptic, playDrainHaptic, playTapHaptic } = useProgressiveHaptics();
@@ -374,10 +371,10 @@ export function WaterGlass({
     Gesture.Exclusive(longPressGesture, tapGesture)
   );
 
-  // Colors based on goal status - turquoise theme
+  // Colors based on goal status - cool blue theme matching mockup
   const waterColors = isGoalReached 
     ? { light: '#D1FAE5', mid: '#6EE7B7', dark: '#34D399', deep: '#10B981' }
-    : { light: '#CCFBF1', mid: '#5EEAD4', dark: '#2DD4BF', deep: '#14B8A6' };
+    : { light: '#E0F2FE', mid: '#7DD3FC', dark: '#38BDF8', deep: '#0EA5E9' };
 
   return (
     <GestureDetector gesture={composedGesture}>
@@ -419,10 +416,11 @@ export function WaterGlass({
               <Stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.15" />
             </LinearGradient>
 
-            {/* Shadow gradient - softer, more natural */}
+            {/* Shadow gradient - softer, more diffused like mockup */}
             <RadialGradient id="shadowGradient" cx="50%" cy="50%" rx="50%" ry="50%">
-              <Stop offset="0%" stopColor="#94A3B8" stopOpacity="0.18" />
-              <Stop offset="60%" stopColor="#94A3B8" stopOpacity="0.08" />
+              <Stop offset="0%" stopColor="#94A3B8" stopOpacity="0.22" />
+              <Stop offset="40%" stopColor="#94A3B8" stopOpacity="0.12" />
+              <Stop offset="70%" stopColor="#94A3B8" stopOpacity="0.05" />
               <Stop offset="100%" stopColor="#94A3B8" stopOpacity="0" />
             </RadialGradient>
 
@@ -444,30 +442,31 @@ export function WaterGlass({
             </LinearGradient>
           </Defs>
 
-          {/* Shadow under glass */}
+          {/* Shadow under glass - larger, softer like mockup */}
           <Ellipse
             cx={centerX}
-            cy={glassBottom + shadowPadding / 2 + 5}
-            rx={bottomWidth * 0.6}
-            ry={8}
+            cy={glassBottom + shadowPadding / 2 + 8}
+            rx={bottomWidth * 0.75}
+            ry={12}
             fill="url(#shadowGradient)"
           />
 
-          {/* Glass body - outer stroke */}
+          {/* Glass body - outer stroke (very subtle like mockup) */}
           <Path
             d={glassPath}
             stroke={Colors.glassStroke}
-            strokeWidth={GlassDimensions.strokeWidth}
+            strokeWidth={1.0}
             fill="url(#glassBodyGradient)"
+            opacity={0.8}
           />
 
-          {/* Glass inner stroke for depth */}
+          {/* Glass inner stroke for depth (subtle) */}
           <Path
             d={innerGlassPath}
             stroke={Colors.glassStrokeLight}
-            strokeWidth={0.75}
+            strokeWidth={0.5}
             fill="url(#innerHighlight)"
-            opacity={0.6}
+            opacity={0.4}
           />
 
           {/* Water fill */}

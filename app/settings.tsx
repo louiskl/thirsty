@@ -58,10 +58,13 @@ export default function SettingsScreen() {
         {/* Daily Goal */}
         <View style={styles.section}>
           <View style={styles.goalHeader}>
-            <Text style={styles.goalValue}>
-              {(settings.dailyGoal / 1000).toFixed(1)}
-            </Text>
-            <Text style={styles.goalUnit}>Liter pro Tag</Text>
+            <View style={styles.goalValueRow}>
+              <Text style={styles.goalValue}>
+                {(settings.dailyGoal / 1000).toFixed(1).replace('.', ',')}
+              </Text>
+              <Text style={styles.goalValueUnit}>Liter</Text>
+            </View>
+            <Text style={styles.goalUnit}>pro Tag</Text>
           </View>
           
           <Slider
@@ -193,11 +196,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: Spacing.xl,
   },
+  goalValueRow: {
+    flexDirection: 'row',
+    alignItems: 'baseline',
+  },
   goalValue: {
     fontFamily: Typography.fonts.light,
     fontSize: Typography.sizes.hero,
     color: Colors.text,
     letterSpacing: Typography.letterSpacing.tighter,
+  },
+  goalValueUnit: {
+    fontFamily: Typography.fonts.regular,
+    fontSize: Typography.sizes.title2,
+    color: Colors.textSecondary,
+    marginLeft: Spacing.sm,
   },
   goalUnit: {
     fontFamily: Typography.fonts.regular,
