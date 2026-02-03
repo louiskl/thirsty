@@ -12,47 +12,103 @@ struct WaterGlassView: View {
         GeometryReader { geometry in
             let width = geometry.size.width
             let height = geometry.size.height
+            let shadowHeight: CGFloat = 8
+            let glassHeight = height - shadowHeight
             
             ZStack {
-                // Glass outline
-                GlassShape()
-                    .stroke(
-                        Color.glassStroke,
-                        style: StrokeStyle(lineWidth: 1.5, lineCap: .round, lineJoin: .round)
-                    )
-                
-                // Water fill with gradient
-                GlassShape()
+                // Shadow under glass
+                Ellipse()
                     .fill(
-                        LinearGradient(
-                            colors: isGoalReached
-                                ? [Color.successLight, Color.success.opacity(0.9)]
-                                : [Color.waterLight, Color.water.opacity(0.9)],
-                            startPoint: .top,
-                            endPoint: .bottom
+                        RadialGradient(
+                            colors: [Color.glassShadow, Color.clear],
+                            center: .center,
+                            startRadius: 0,
+                            endRadius: width * 0.4
                         )
                     )
-                    .mask(
-                        VStack {
-                            Spacer()
-                            Rectangle()
-                                .frame(height: height * CGFloat(min(animatedPercentage, 1.0)))
-                        }
-                    )
-                    .clipShape(GlassShape())
+                    .frame(width: width * 0.7, height: shadowHeight * 2)
+                    .offset(y: glassHeight / 2 + 2)
                 
-                // Wave effect at water surface
-                if animatedPercentage > 0.05 && animatedPercentage < 0.98 {
-                    WaveShape(offset: waveOffset, amplitude: 2)
+                // Glass container
+                ZStack {
+                    // Glass body - outer stroke (thinner, more elegant)
+                    GlassShape()
+                        .stroke(Color.glassStroke, lineWidth: 1.2)
+                        .frame(width: width, height: glassHeight)
+                    
+                    // Glass body - fill with subtle gradient
+                    GlassShape()
                         .fill(
-                            isGoalReached
-                                ? Color.successLight.opacity(0.6)
-                                : Color.waterLight.opacity(0.6)
+                            LinearGradient(
+                                colors: [Color.white.opacity(0.12), Color.white.opacity(0.08), Color.white.opacity(0.14)],
+                                startPoint: .leading,
+                                endPoint: .trailing
+                            )
                         )
-                        .frame(height: 8)
-                        .offset(y: height * (1 - CGFloat(animatedPercentage)) - height/2 + 4)
+                        .frame(width: width, height: glassHeight)
+                    
+                    // Inner glass stroke for depth
+                    GlassShape()
+                        .stroke(Color.glassStrokeLight, lineWidth: 0.6)
+                        .padding(2)
+                        .frame(width: width, height: glassHeight)
+                        .opacity(0.55)
+                    
+                    // Water fill with gradient - turquoise theme
+                    GlassShape()
+                        .fill(
+                            LinearGradient(
+                                colors: isGoalReached
+                                    ? [Color.successLight, Color.success.opacity(0.88), Color.successDark.opacity(0.92)]
+                                    : [Color.waterLight.opacity(0.85), Color.water.opacity(0.88), Color.waterMid.opacity(0.92), Color.waterDark.opacity(0.95)],
+                                startPoint: .top,
+                                endPoint: .bottom
+                            )
+                        )
+                        .mask(
+                            VStack(spacing: 0) {
+                                Spacer(minLength: 0)
+                                Rectangle()
+                                    .frame(height: glassHeight * CGFloat(min(animatedPercentage, 1.0)))
+                            }
+                        )
                         .clipShape(GlassShape())
+                        .frame(width: width, height: glassHeight)
+                    
+                    // Wave effect at water surface
+                    if animatedPercentage > 0.05 && animatedPercentage < 0.98 {
+                        WaveShape(offset: waveOffset, amplitude: 1.5)
+                            .fill(
+                                isGoalReached
+                                    ? Color.successLight.opacity(0.7)
+                                    : Color.waterLight.opacity(0.7)
+                            )
+                            .frame(height: 6)
+                            .offset(y: glassHeight * (0.5 - CGFloat(animatedPercentage)) + 3)
+                            .clipShape(GlassShape())
+                            .frame(width: width, height: glassHeight)
+                    }
+                    
+                    // Bubbles (static for widgets - no continuous animation)
+                    if animatedPercentage > 0.15 {
+                        BubblesView(
+                            fillPercentage: animatedPercentage,
+                            glassWidth: width,
+                            glassHeight: glassHeight
+                        )
+                        .clipShape(GlassShape())
+                        .frame(width: width, height: glassHeight)
+                    }
+                    
+                    // Glass highlight - top rim
+                    GlassHighlight(width: width)
+                        .offset(y: -glassHeight / 2 + 3)
+                    
+                    // Side reflection - left
+                    SideReflection(glassHeight: glassHeight)
+                        .offset(x: -width / 2 + 6)
                 }
+                .offset(y: -shadowHeight / 2)
             }
         }
         .onAppear {
@@ -62,13 +118,88 @@ struct WaterGlassView: View {
             }
             
             // Subtle continuous wave animation
-            withAnimation(.linear(duration: 3).repeatForever(autoreverses: false)) {
+            withAnimation(.linear(duration: 4).repeatForever(autoreverses: false)) {
                 waveOffset = .pi * 2
             }
         }
         .onChange(of: fillPercentage) { oldValue, newValue in
             withAnimation(.spring(response: 0.5, dampingFraction: 0.7)) {
                 animatedPercentage = newValue
+            }
+        }
+    }
+}
+
+// MARK: - Glass Highlight
+
+struct GlassHighlight: View {
+    let width: CGFloat
+    
+    var body: some View {
+        Capsule()
+            .fill(
+                LinearGradient(
+                    colors: [Color.white.opacity(0.95), Color.white.opacity(0.5), Color.white.opacity(0)],
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+            )
+            .frame(width: width * 0.55, height: 2.5)
+    }
+}
+
+// MARK: - Side Reflection
+
+struct SideReflection: View {
+    let glassHeight: CGFloat
+    
+    var body: some View {
+        Capsule()
+            .fill(Color.glassReflection)
+            .frame(width: 2, height: glassHeight * 0.65)
+            .opacity(0.5)
+    }
+}
+
+// MARK: - Bubbles View
+
+struct BubblesView: View {
+    let fillPercentage: Double
+    let glassWidth: CGFloat
+    let glassHeight: CGFloat
+    
+    // Fixed bubble positions for widget - smaller, fewer bubbles for elegance
+    private let bubbleData: [(x: CGFloat, y: CGFloat, size: CGFloat)] = [
+        (0.35, 0.35, 2.2),
+        (0.58, 0.55, 1.8),
+        (0.42, 0.72, 1.5),
+        (0.65, 0.42, 1.6),
+    ]
+    
+    var body: some View {
+        ZStack {
+            ForEach(0..<bubbleData.count, id: \.self) { index in
+                let bubble = bubbleData[index]
+                let waterTop = 1.0 - fillPercentage
+                let bubbleY = waterTop + bubble.y * fillPercentage
+                
+                if bubbleY > waterTop && bubbleY < 1.0 {
+                    Circle()
+                        .fill(
+                            RadialGradient(
+                                colors: [Color.bubbleHighlight, Color.bubble],
+                                center: .topLeading,
+                                startRadius: 0,
+                                endRadius: bubble.size
+                            )
+                        )
+                        .frame(width: bubble.size, height: bubble.size)
+                        .position(
+                            x: glassWidth * bubble.x,
+                            y: glassHeight * bubbleY
+                        )
+                        .opacity(0.45)  // More subtle
+                }
             }
         }
     }
@@ -82,11 +213,12 @@ struct GlassShape: Shape {
         
         let width = rect.width
         let height = rect.height
-        let cornerRadius: CGFloat = 4
+        // More rounded corners for elegant look
+        let cornerRadius: CGFloat = min(width, height) * 0.08
         
-        // Tapered glass shape (wider at top, narrower at bottom)
-        let topWidth = width * 0.95
-        let bottomWidth = width * 0.75
+        // Slimmer tapered glass shape (narrower, more elegant)
+        let topWidth = width * 0.85      // Slimmer top
+        let bottomWidth = width * 0.62   // More tapered bottom
         
         let topLeft = CGPoint(x: (width - topWidth) / 2, y: 0)
         let topRight = CGPoint(x: (width + topWidth) / 2, y: 0)
@@ -159,7 +291,7 @@ struct WaveShape: Shape {
         
         for x in stride(from: 0, through: width, by: 1) {
             let relativeX = x / width
-            let sine = sin(relativeX * .pi * 2 + offset)
+            let sine = sin(relativeX * .pi * 3 + offset)
             let y = midY + amplitude * CGFloat(sine)
             path.addLine(to: CGPoint(x: x, y: y))
         }
@@ -176,7 +308,10 @@ struct WaveShape: Shape {
 
 #Preview {
     VStack(spacing: 20) {
-        WaterGlassView(fillPercentage: 0.6, isGoalReached: false)
+        WaterGlassView(fillPercentage: 0.4, isGoalReached: false)
+            .frame(width: 80, height: 100)
+        
+        WaterGlassView(fillPercentage: 0.7, isGoalReached: false)
             .frame(width: 80, height: 100)
         
         WaterGlassView(fillPercentage: 1.0, isGoalReached: true)

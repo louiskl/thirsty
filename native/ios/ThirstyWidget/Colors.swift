@@ -3,14 +3,16 @@ import SwiftUI
 // MARK: - Color Extensions
 
 extension Color {
-    // Primary water colors (matching React Native app)
-    static let water = Color(hex: "BAE6FD")
-    static let waterLight = Color(hex: "E0F2FE")
-    static let waterDark = Color(hex: "7DD3FC")
+    // Primary water colors - turquoise theme (matching React Native app)
+    static let water = Color(hex: "5EEAD4")
+    static let waterLight = Color(hex: "99F6E4")
+    static let waterMid = Color(hex: "2DD4BF")
+    static let waterDark = Color(hex: "14B8A6")
     
-    // Success colors (goal reached)
+    // Success colors (goal reached - 3D gradient)
     static let success = Color(hex: "6EE7B7")
     static let successLight = Color(hex: "D1FAE5")
+    static let successDark = Color(hex: "34D399")
     
     // Text colors
     static let textPrimary = Color(hex: "4B5563")
@@ -19,8 +21,16 @@ extension Color {
     
     // UI colors
     static let widgetBackground = Color(hex: "FAFBFC")
-    static let glassStroke = Color(hex: "E5E7EB")
+    static let glassStroke = Color(hex: "CBD5E1")
+    static let glassStrokeLight = Color(hex: "E2E8F0")
+    static let glassShadow = Color(hex: "94A3B8").opacity(0.25)
+    static let glassHighlight = Color.white.opacity(0.85)
+    static let glassReflection = Color.white.opacity(0.4)
     static let buttonBackground = Color(hex: "F3F4F6")
+    
+    // Bubble colors
+    static let bubble = Color.white.opacity(0.6)
+    static let bubbleHighlight = Color.white.opacity(0.9)
     
     // Hex color initializer
     init(hex: String) {
