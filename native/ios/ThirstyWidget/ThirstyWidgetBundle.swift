@@ -5,6 +5,9 @@ import SwiftUI
 struct ThirstyWidgetBundle: WidgetBundle {
     var body: some Widget {
         ThirstyWidget()
+        ThirstyCircularWidget()
+        ThirstyInlineWidget()
+        ThirstyRectangularWidget()
         ThirstyProgressWidget()
     }
 }

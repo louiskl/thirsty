@@ -1,5 +1,6 @@
 import Foundation
 import WidgetKit
+import React
 
 @objc(SharedDataModule)
 class SharedDataModule: NSObject {
@@ -31,12 +32,43 @@ class SharedDataModule: NSObject {
     dateFormatter.dateFormat = "yyyy-MM-dd"
     defaults.set(dateFormatter.string(from: Date()), forKey: "date")
     
+    // Clear widget update flag since app is the source of truth now
+    defaults.set(false, forKey: "widgetUpdated")
+    
     defaults.synchronize()
     
     // Reload widget timeline
     if #available(iOS 14.0, *) {
       WidgetCenter.shared.reloadAllTimelines()
     }
+  }
+  
+  @objc
+  func getWidgetData(_ resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
+    guard let defaults = UserDefaults(suiteName: appGroupIdentifier) else {
+      reject("ERROR", "Could not access app group", nil)
+      return
+    }
+    
+    let consumed = defaults.integer(forKey: "consumed")
+    let goal = defaults.integer(forKey: "goal")
+    let widgetUpdated = defaults.bool(forKey: "widgetUpdated")
+    let lastWidgetAmount = defaults.integer(forKey: "lastWidgetAmount")
+    
+    // Clear the widget updated flag after reading
+    if widgetUpdated {
+      defaults.set(false, forKey: "widgetUpdated")
+      defaults.synchronize()
+    }
+    
+    let result: [String: Any] = [
+      "consumed": consumed,
+      "goal": goal,
+      "widgetUpdated": widgetUpdated,
+      "lastWidgetAmount": lastWidgetAmount
+    ]
+    
+    resolve(result)
   }
   
   @objc

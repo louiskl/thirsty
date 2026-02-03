@@ -45,8 +45,14 @@ struct AddWaterIntent: AppIntent {
         
         defaults.synchronize()
         
-        // Reload widgets
+        // Reload ALL widgets explicitly
         WidgetCenter.shared.reloadAllTimelines()
+        // Also reload each kind individually for Lock Screen widgets
+        WidgetCenter.shared.reloadTimelines(ofKind: "ThirstyWidget")
+        WidgetCenter.shared.reloadTimelines(ofKind: "ThirstyCircularWidget")
+        WidgetCenter.shared.reloadTimelines(ofKind: "ThirstyInlineWidget")
+        WidgetCenter.shared.reloadTimelines(ofKind: "ThirstyRectangularWidget")
+        WidgetCenter.shared.reloadTimelines(ofKind: "ThirstyProgressWidget")
         
         return .result()
     }
@@ -78,7 +84,13 @@ struct RemoveWaterIntent: AppIntent {
             defaults.set(0, forKey: "consumed")
             defaults.set(0.0, forKey: "percentage")
             defaults.synchronize()
+            // Reload ALL widgets explicitly
             WidgetCenter.shared.reloadAllTimelines()
+            WidgetCenter.shared.reloadTimelines(ofKind: "ThirstyWidget")
+            WidgetCenter.shared.reloadTimelines(ofKind: "ThirstyCircularWidget")
+            WidgetCenter.shared.reloadTimelines(ofKind: "ThirstyInlineWidget")
+            WidgetCenter.shared.reloadTimelines(ofKind: "ThirstyRectangularWidget")
+            WidgetCenter.shared.reloadTimelines(ofKind: "ThirstyProgressWidget")
             return .result()
         }
         
@@ -100,8 +112,14 @@ struct RemoveWaterIntent: AppIntent {
         
         defaults.synchronize()
         
-        // Reload widgets
+        // Reload ALL widgets explicitly
         WidgetCenter.shared.reloadAllTimelines()
+        // Also reload each kind individually for Lock Screen widgets
+        WidgetCenter.shared.reloadTimelines(ofKind: "ThirstyWidget")
+        WidgetCenter.shared.reloadTimelines(ofKind: "ThirstyCircularWidget")
+        WidgetCenter.shared.reloadTimelines(ofKind: "ThirstyInlineWidget")
+        WidgetCenter.shared.reloadTimelines(ofKind: "ThirstyRectangularWidget")
+        WidgetCenter.shared.reloadTimelines(ofKind: "ThirstyProgressWidget")
         
         return .result()
     }

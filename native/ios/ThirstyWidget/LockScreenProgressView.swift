@@ -8,11 +8,11 @@ struct AccessoryProgressView: View {
     
     var body: some View {
         VStack(spacing: 4) {
-            // Progress bar mit Tropfen-Icon
+            // Progress bar mit Tropfen-Icon (größer)
             ProgressView(value: min(data.percentage, 1.0)) {
                 HStack {
                     Image(systemName: "drop.fill")
-                        .font(.system(size: 10))
+                        .font(.system(size: 14))
                     Spacer()
                 }
             }

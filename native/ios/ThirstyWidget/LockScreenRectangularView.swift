@@ -1,16 +1,16 @@
 import SwiftUI
 import WidgetKit
 
-// MARK: - Accessory Rectangular View (Lock Screen Widget über der Uhrzeit)
+// MARK: - Accessory Rectangular View (Lock Screen Widget unter der Uhrzeit)
 
 struct AccessoryRectangularView: View {
     let data: WaterData
     
     var body: some View {
-        HStack(spacing: 8) {
-            // Wassertropfen-Icon
+        HStack(spacing: 10) {
+            // Wassertropfen-Icon (größer)
             Image(systemName: "drop.fill")
-                .font(.system(size: 24))
+                .font(.system(size: 32))
                 .widgetAccentable()
             
             // Text mit Fortschritt
@@ -27,10 +27,26 @@ struct AccessoryRectangularView: View {
     }
 }
 
+// MARK: - Separates Widget für Rectangular-Ansicht (unter der Uhrzeit)
+
+struct ThirstyRectangularWidget: Widget {
+    let kind: String = "ThirstyRectangularWidget"
+    
+    var body: some WidgetConfiguration {
+        StaticConfiguration(kind: kind, provider: WaterTimelineProvider()) { entry in
+            AccessoryRectangularView(data: entry.waterData)
+                .containerBackground(.fill.tertiary, for: .widget)
+        }
+        .configurationDisplayName("Wasser Status")
+        .description("Zeigt deinen Wasserkonsum unter der Uhrzeit")
+        .supportedFamilies([.accessoryRectangular])
+    }
+}
+
 // MARK: - Preview
 
 #Preview(as: .accessoryRectangular) {
-    ThirstyWidget()
+    ThirstyRectangularWidget()
 } timeline: {
     WaterEntry(date: .now, waterData: .placeholder)
     WaterEntry(date: .now, waterData: WaterData(consumed: 500, goal: 2000, percentage: 0.25, date: ""))
