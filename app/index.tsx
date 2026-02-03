@@ -206,6 +206,7 @@ export default function MainScreen() {
         {/* Swipe-up gesture area - invisible, no indicator */}
         <GestureDetector gesture={swipeUpGesture}>
           <View style={styles.swipeArea} />
+        </GestureDetector>
       </SafeAreaView>
 
       {/* Amount Sheet */}
