@@ -6,7 +6,6 @@ struct WaterGlassView: View {
     
     // Animation state
     @State private var animatedPercentage: Double = 0
-    @State private var waveOffset: Double = 0
     
     var body: some View {
         GeometryReader { geometry in
@@ -75,19 +74,7 @@ struct WaterGlassView: View {
                         .clipShape(GlassShape())
                         .frame(width: width, height: glassHeight)
                     
-                    // Wave effect at water surface
-                    if animatedPercentage > 0.05 && animatedPercentage < 0.98 {
-                        WaveShape(offset: waveOffset, amplitude: 1.5)
-                            .fill(
-                                isGoalReached
-                                    ? Color.successLight.opacity(0.7)
-                                    : Color.waterLight.opacity(0.7)
-                            )
-                            .frame(height: 6)
-                            .offset(y: glassHeight * (0.5 - CGFloat(animatedPercentage)) + 3)
-                            .clipShape(GlassShape())
-                            .frame(width: width, height: glassHeight)
-                    }
+                    // Wave effect removed for widgets - causes visual artifacts at small sizes
                     
                     // Bubbles (static for widgets - no continuous animation)
                     if animatedPercentage > 0.15 {
@@ -115,11 +102,6 @@ struct WaterGlassView: View {
             // Animate water level
             withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
                 animatedPercentage = fillPercentage
-            }
-            
-            // Subtle continuous wave animation
-            withAnimation(.linear(duration: 4).repeatForever(autoreverses: false)) {
-                waveOffset = .pi * 2
             }
         }
         .onChange(of: fillPercentage) { oldValue, newValue in
