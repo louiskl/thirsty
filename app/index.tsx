@@ -14,7 +14,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import * as Haptics from 'expo-haptics';
-import { Colors, Typography, Spacing, Defaults, Timing } from '../lib/constants';
+import { Colors, Typography, Spacing, Radius, Defaults, Timing } from '../lib/constants';
 import { WaterGlass } from '../components/WaterGlass';
 import { AmountSheet } from '../components/AmountSheet';
 import { QuickPanel } from '../components/QuickPanel';
